@@ -1,0 +1,44 @@
+GET http://localhost:3001/api/blogs
+
+### Valid existing ID
+GET http://localhost:3001/api/blogs/3
+
+### Valid nonexisting ID
+GET http://localhost:3001/api/blogs/123142
+
+### Malformed ID
+GET http://localhost:3001/api/blogs/1a234
+
+### POST with valid data
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "testuser2 TWOOOOO",
+  "author": "Zuckerbegg Markku",
+  "url": "https://metabook.com",
+  "likes": 5
+}
+
+### POST with valid data without likes field
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "No idea about likes",
+  "author": "Dont Like",
+  "url": "https://likes-whats-that"
+}
+
+### POST with missing fields data
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "author": "Zuckerbegg Markku",
+  "url": "https://metabook.com",
+  "likes": 5
+}
+
+### DELETE
+DELETE http://localhost:3001/api/blogs/3
