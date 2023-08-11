@@ -21,6 +21,13 @@ User.init({
       isEmail: true
     }
   },
+  passwordHash: {
+    type: DataTypes.STRING(60),
+    allowNull: false,
+    validate: {
+      len: [60, 60]
+    }
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false

@@ -1,15 +1,42 @@
+const bcrypt              = require('bcrypt')
 const router              = require('express').Router()
 
-const { User }            = require('../models')
+const {
+  Blog,
+  User
+}                         = require('../models')
 
 router.get('/', async (req, res) => {
-  const users = await User.findAll()
+  const users = await User.findAll({
+    attributes: {
+      exclude: ['passwordHash']
+    },
+    include: {
+      model: Blog,
+      attributes: {
+        exclude: ['userId']
+      }
+    }
+  })
   return res.json(users)
 })
 
 router.post('/', async (req, res) => {
-  const user = await User.create(req.body)
-  return res.json(user)
+  const SALT_ROUNDS = 10
+  const { username, password, name } = req.body
+  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS)
+
+  const user = await User.create({
+    username,
+    passwordHash,
+    name
+  })
+
+  return res.json({
+    id: user.id,
+    username: user.username,
+    name: user.name
+  })
 })
 
 router.put('/:username', async (req, res) => {
@@ -31,7 +58,12 @@ router.put('/:username', async (req, res) => {
   user.name = req.body.name
   await user.save()
 
-  return res.json(user)
+  return res.json({
+    username: user.username,
+    name: user.name,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
+  })
 })
 
 module.exports = router

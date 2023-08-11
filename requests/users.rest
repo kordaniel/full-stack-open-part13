@@ -5,7 +5,7 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "username": "testuser2",
+  "username": "test@user.fi",
   "password": "salainen",
   "name": "Test User"
 }
@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### PUT update name field of user
-PUT http://localhost:3001/api/users/testuser
+PUT http://localhost:3001/api/users/test@user.fi
 Content-Type: application/json
 
 {
