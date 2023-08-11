@@ -4,20 +4,14 @@ const { blogFinder }      = require('../util/middleware')
 const { Blog }            = require('../models')
 
 
-// NOTE: DB operations should really be wrapped in try/catch
-
 router.get('/', async (req, res) => {
   const blogs = await Blog.findAll()
   return res.json(blogs)
 })
 
 router.post('/', async (req, res) => {
-  try {
-    const blog = await Blog.create(req.body)
-    return res.json(blog)
-  } catch (error) {
-    return res.status(400).json({ error })
-  }
+  const blog = await Blog.create(req.body)
+  return res.json(blog)
 })
 
 router.get('/:id', blogFinder, async (req, res) => {
