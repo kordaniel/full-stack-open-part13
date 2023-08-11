@@ -21,7 +21,7 @@ const errorHandler = (err, req, res, next) => {
       //return res.status(400).json({ error: 'SQL error (most likely due to a malformatted id)' })
       return res.status(400).json({ error: err.original.toString() }) // use original field of error to mask the fact that we are using sequelize
     case 'SequelizeValidationError':
-      return res.status(400).json({ error: err.errors })
+      return res.status(400).json({ error: err.errors.map(e => e.message) })
     case 'SequelizeUniqueConstraintError':
       return res.status(400).json({ error: err.original.toString() })
     default:
