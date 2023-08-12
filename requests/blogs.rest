@@ -12,13 +12,14 @@ GET http://localhost:3001/api/blogs/1a234
 ### POST with valid data
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAdXNlci5maSIsImlkIjoxLCJpYXQiOjE2OTE3OTM4MzN9.DNS6nX8-XsKGma3tIl14JL7G7D1v3N_XIRGK_OpEQ0A
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAdXNlci5maSIsImlkIjoxLCJpYXQiOjE2OTE4NDQwNDl9.Llbb7A_CFUiprq8JIZh0g6Mwe18WPM1VjSdKtoO_Bps
 
 {
   "title": "Third authors blog2",
   "author": "One Two",
   "url": "https://xtwit.com",
-  "likes": 33
+  "likes": 33,
+  "year": "1990"
 }
 
 ### POST with valid data without likes field
