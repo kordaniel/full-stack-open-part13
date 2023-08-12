@@ -12,10 +12,11 @@ router.get('/', async (req, res) => {
   // Op.iLike case insensitive like operator (only for Postgres !!!)
   const where = req.query.search
     ? {
-      title: {
-        [Op.iLike]: `%${req.query.search}%`
+        [Op.or]: [
+          { title: { [Op.iLike]: `%${req.query.search}%` } },
+          { author: { [Op.iLike]: `%${req.query.search}%` } }
+        ]
       }
-    }
     : {}
 
   const blogs = await Blog.findAll({
