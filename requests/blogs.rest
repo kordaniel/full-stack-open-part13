@@ -1,7 +1,7 @@
 GET http://localhost:3001/api/blogs
 
 ### Valid existing ID
-GET http://localhost:3001/api/blogs/6
+GET http://localhost:3001/api/blogs/2
 
 ### Valid nonexisting ID
 GET http://localhost:3001/api/blogs/123142
@@ -13,16 +13,18 @@ GET http://localhost:3001/api/blogs/1a234
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAdXNlci5maSIsImlkIjoxLCJpYXQiOjE2OTE3OTM4MzN9.DNS6nX8-XsKGma3tIl14JL7G7D1v3N_XIRGK_OpEQ0A
+
 {
-  "title": "testuser2 TWOOOOO",
-  "author": "Zuckerbegg Markku",
-  "url": "https://metabook.com",
-  "likes": 5
+  "title": "Third authors blog2",
+  "author": "One Two",
+  "url": "https://xtwit.com",
+  "likes": 33
 }
 
 ### POST with valid data without likes field
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QyQHVzZXIuZmkiLCJpZCI6MiwiaWF0IjoxNjkxNzk0MTkzfQ.JIDfWjyCNdkJ9Ls0zzdmS3ddKnFNlNT9PTT0BYEtT9E
 
 {
   "title": "No idea about likes",
@@ -40,12 +42,13 @@ Content-Type: application/json
 }
 
 ### DELETE
-DELETE http://localhost:3001/api/blogs/9
+DELETE http://localhost:3001/api/blogs/1
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAdXNlci5maSIsImlkIjoxLCJpYXQiOjE2OTE3OTM4MzN9.DNS6nX8-XsKGma3tIl14JL7G7D1v3N_XIRGK_OpEQ0A
 
 ### PUT
-PUT http://localhost:3001/api/blogs/11
+PUT http://localhost:3001/api/blogs/2
 Content-Type: application/json
 
 {
-  "likes": 2
+  "likes": 4
 }
