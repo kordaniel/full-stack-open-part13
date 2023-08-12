@@ -1,4 +1,5 @@
 const router              = require('express').Router()
+const { Op }              = require('sequelize')
 
 const {
   blogFinder,
@@ -8,6 +9,15 @@ const { Blog, User }      = require('../models')
 
 
 router.get('/', async (req, res) => {
+  // Op.iLike case insensitive like operator (only for Postgres !!!)
+  const where = req.query.search
+    ? {
+      title: {
+        [Op.iLike]: `%${req.query.search}%`
+      }
+    }
+    : {}
+
   const blogs = await Blog.findAll({
     attributes: {
       exclude: ['userId']
@@ -15,7 +25,8 @@ router.get('/', async (req, res) => {
     include: {
       model: User,
       attributes: ['name']
-    }
+    },
+    where
   })
   return res.json(blogs)
 })
