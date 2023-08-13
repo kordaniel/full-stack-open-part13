@@ -1,6 +1,9 @@
 const router              = require('express').Router()
 
-const { tokenExtractor }  = require('../util/middleware')
+const {
+  tokenExtractor,
+  userSessionLoader
+}                         = require('../util/middleware')
 const { Readinglist }     = require('../models')
 
 
@@ -19,7 +22,7 @@ router.post('/', async (req, res) => {
     : res.json(readinglist)
 })
 
-router.put('/:id', tokenExtractor, async (req, res) => {
+router.put('/:id', [tokenExtractor, userSessionLoader], async (req, res) => {
   const readinglist = await Readinglist.findOne({
     where: {
       userId: req.decodedToken.id,

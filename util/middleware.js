@@ -1,9 +1,15 @@
 const jwt                 = require('jsonwebtoken')
-const { Blog, User }      = require('../models')
+const {
+  Blog,
+  Session,
+  User
+}                         = require('../models')
 const { SECRET }          = require('./config')
 
 
 const tokenExtractor = (req, res, next) => {
+  // This should be removed and only the user (including session from DB if necessary)
+  // should be stored in req in real applications(?)
   const authorization = req.get('authorization')
   if (!(authorization && authorization.toLowerCase().startsWith('bearer '))) {
     return res.status(401).json({ error: 'token missing' })
@@ -15,6 +21,28 @@ const tokenExtractor = (req, res, next) => {
     return res.status(401).json({ error: 'invalid token' })
   }
 
+  next()
+}
+
+const userSessionLoader = async (req, res, next) => {
+  const session = await Session.findByPk(req.decodedToken.id)
+  if (!session) {
+    return res.status(401).json({ error: 'no session found for token' })
+  }
+
+  const user = await User.findByPk(session.userId, {
+    attributes: ['id', 'disabled']
+  })
+  if (!user) {
+    // user should be fetched from the DB in the same query as the session
+    // to avoid this check. session ID PK is FK to user ID with restriction
+    await session.destroy()
+    return res.status(406).json({ error: 'invalid token, no matching account'})
+  } else if (user.disabled) {
+    return res.status(401).json({ error: 'account disabled' })
+  }
+
+  req.sessionUser = user
   next()
 }
 
@@ -61,6 +89,7 @@ const errorHandler = (err, req, res, next) => {
 
 module.exports = {
   tokenExtractor,
+  userSessionLoader,
   blogFinder,
   errorHandler
 }

@@ -3,9 +3,13 @@ const jwt                 = require('jsonwebtoken')
 const router              = require('express').Router()
 
 const { SECRET }          = require('../util/config')
-const { User }            = require('../models')
+const { User, Session }   = require('../models')
+const {
+  tokenExtractor,
+  userSessionLoader
+}                         = require('../util/middleware')
 
-router.post('/', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body
 
   if (!(username && password)) {
@@ -26,6 +30,12 @@ router.post('/', async (req, res) => {
     })
   }
 
+  if (user.disabled) {
+    return res.status(401).json({
+      error: 'account disabled'
+    })
+  }
+
   const userForToken = {
     username: user.username,
     id: user.id
@@ -33,11 +43,27 @@ router.post('/', async (req, res) => {
 
   const token = jwt.sign(userForToken, SECRET)
 
+  const [session, created] = await Session.findOrCreate({
+    where: { userId: user.id },
+    defaults: { token }
+  })
+
   return res.status(200).send({
-    token,
+    token: session.token,
     username: user.username,
     name: user.name
   })
 })
+
+router.delete('/logout', [tokenExtractor, userSessionLoader], async (req, res) => {
+  const session = await Session.findByPk(req.sessionUser.id)
+
+  if (session) {
+    await session.destroy()
+  }
+
+  return res.status(200).end()
+})
+
 
 module.exports = router

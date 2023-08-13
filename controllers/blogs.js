@@ -3,7 +3,8 @@ const { Op }              = require('sequelize')
 
 const {
   blogFinder,
-  tokenExtractor
+  tokenExtractor,
+  userSessionLoader
 }                         = require('../util/middleware')
 const { Blog, User }      = require('../models')
 
@@ -35,11 +36,10 @@ router.get('/', async (req, res) => {
   return res.json(blogs)
 })
 
-router.post('/', tokenExtractor, async (req, res) => {
-  const user = await User.findByPk(req.decodedToken.id)
+router.post('/', [tokenExtractor, userSessionLoader], async (req, res) => {
   const blog = await Blog.create({
     ...req.body,
-    userId: user.id
+    userId: req.sessionUser.id
   })
   return res.json(blog)
 })
@@ -50,7 +50,12 @@ router.get('/:id', blogFinder, async (req, res) => {
     : res.status(404).end()
 })
 
-router.delete('/:id', [tokenExtractor, blogFinder], async (req, res) => {
+router.delete(
+  '/:id',
+  [tokenExtractor, userSessionLoader, blogFinder],
+  async (
+    req, res
+) => {
   if (!req.blog) {
     return res.status(404).end()
   }
@@ -64,6 +69,7 @@ router.delete('/:id', [tokenExtractor, blogFinder], async (req, res) => {
 })
 
 router.put('/:id', blogFinder, async (req, res) => {
+  // No session required !
   if (!req.blog) {
     return res.status(404).end()
   }

@@ -1,7 +1,12 @@
 const Blog                = require('./blog')
 const User                = require('./user')
 const Readinglist         = require('./readinglist')
+const Session             = require('./session')
 
+// NOTE: User can only have one active session. If we wanted to support several
+//       concurrent sessions we would have to use a many-to-many relation.
+User.hasOne(Session)
+Session.belongsTo(User)
 
 User.hasMany(Blog)
 Blog.belongsTo(User)
@@ -15,5 +20,6 @@ Blog.belongsToMany(User, { through: Readinglist })
 module.exports = {
   Blog,
   Readinglist,
-  User
+  User,
+  Session
 }
