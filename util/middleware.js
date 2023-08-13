@@ -49,6 +49,9 @@ const errorHandler = (err, req, res, next) => {
       return res.status(400).json({ error: err.errors.map(e => e.message) })
     case 'SequelizeUniqueConstraintError':
       return res.status(400).json({ error: err.original.toString() })
+    case 'SequelizeForeignKeyConstraintError':
+      console.error('[ERROR]:', res)
+      return res.status(409).json({ error: 'invalid data' })
     default:
       console.error('[ERROR]:', err)
       return res.status(400).json({ error: 'undeterminated error occured' })
