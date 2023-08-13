@@ -1,5 +1,8 @@
 GET http://localhost:3001/api/users
 
+### GET by id
+GET http://localhost:3001/api/users/1?read=true
+
 ### POST with valid data
 POST http://localhost:3001/api/users
 Content-Type: application/json
